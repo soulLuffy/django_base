@@ -5,6 +5,9 @@ class BookInfo(models.Model):
     """图书信息表"""
     name = models.CharField(max_length=20)
 
+    def __str__(self):
+        return self.name
+
 
 class PeopleInfo(models.Model):
     """人物信息表"""
