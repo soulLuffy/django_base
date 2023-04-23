@@ -14,7 +14,11 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+# 1. print(__file__)  __file__ 为当前文件的绝对路径；os.path.abspath(file) --> 文件的绝对路径
+# -- /home/python/Desktop/django_git/django_base/bookmanager/bookmanager/settings.py
+# 2. os.path.dirname(file)  --> 文件/文件夹 所在目录的绝对路径
+# -- print(os.path.dirname(os.path.abspath(__file__)))
+# -- /home/python/Desktop/django_git/django_base/bookmanager/bookmanager
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -23,9 +27,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '4wxcg834y=nx6ca5izeu$$l4_#*9rm)n$pbhd5#k+a16z=n&&4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# 调试模式 --> 项目开发时，要看到错误信息，需要开启debug模式；项目上线后，将其改为False
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.81.129', '127.0.0.1']
+# 允许访问的端口，默认为127.0.0.1, * 表示所有
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
