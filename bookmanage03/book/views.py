@@ -16,8 +16,8 @@ url以 ? 为分隔，前面为路径，后面为查询字符串
 """
 
 
-def shop(request, city_id, shop_id):
-    # print(city_id, shop_id)
+def shop(request, city_id, mobile):
+    print(city_id, mobile)
     """
       request.GET 可以获取 url 中的查询字符串参数
       得到的结果为一个QueryDict对象，类似字典，但可以一键多值
@@ -29,7 +29,7 @@ def shop(request, city_id, shop_id):
     num2 = query_params['id']
     # order = query_params['order']
     order = query_params.getlist('order')
-    print(num2, '\n', order)
+    # print(num2, '\n', order)
 
     return HttpResponse('ok')
 
