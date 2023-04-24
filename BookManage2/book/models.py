@@ -9,6 +9,9 @@ class BookInfo(models.Model):
     comment_count = models.IntegerField(default=0)
     is_delete = models.BooleanField(default=False)  # 布尔值
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         db_table = 'BookInfo'  # 自定义数据表名称
         verbose_name = '书籍管理'  # admin站点使用
@@ -28,3 +31,6 @@ class Characters(models.Model):
 
     class Meta:
         db_table = 'characters'
+
+    def __str__(self):
+        return self.name
