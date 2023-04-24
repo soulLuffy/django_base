@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from book.models import BookInfo
+from book.models import BookInfo, Characters
 
 
 def index(request):
@@ -87,3 +87,65 @@ BookInfo.objects.filter(id__gte=3)
 BookInfo.objects.filter(pub_date__year='1980')
 # 6.2 查询1980年1月1日之后发表的数据
 BookInfo.objects.filter(pub_date__gt='1980-1-1')
+
+# -------------------------------查询的F对象------------------------------------
+from django.db.models import F
+
+# 用于2个属性的比较。 用法：以filter为例，objects.filter(属性名__运算符=F('第二个属性名'))
+# 查询阅读量比评论数多的数据
+BookInfo.objects.filter(read_count__gt=F('comment_count'))
+# 查询评论数多于阅读量2倍的数据
+BookInfo.objects.filter(comment_count__gt=F('read_count') * 2)
+
+# --------------------------------查询的Q对象------------------------------------
+# 1. and 查询  -- 查询阅读量小于40且id小于4的数据
+BookInfo.objects.filter(read_count__lt=40).filter(id__lt=4)
+BookInfo.objects.filter(read_count__lt=40, id__lt=4)
+
+from django.db.models import Q
+
+# 2. Q对象可用于and、or、not查询，主要用于or
+# 2.1 or用法：BookInfo.objects.filter(Q(属性名__运算符=值) | Q(属性名__运算符=值) | ...)
+# 2.2 and用法：BookInfo.objects.filter(Q(属性名__运算符=值) & Q(属性名__运算符=值) & ...)
+# 2.3 not用法：BookInfo.objects.filter(~Q(属性名__运算符=值))
+
+# or 查询 -- 阅读量小于30或者id大于3的数据
+BookInfo.objects.filter(Q(read_count__lt=30) | Q(id__gt=3))
+BookInfo.objects.filter(~Q(id=3))
+
+# count()获取数量
+BookInfo.objects.filter(id__lt=3).count()
+
+# ---------------------------聚合函数 aggregate---------------------------------
+from django.db.models import Sum, Max, Min, Avg, Count
+
+BookInfo.objects.aggregate(Sum('read_count'))  # 结果为一个字典  {'read_count__sum': 126}
+
+# ---------------------------排序---------------------------------
+BookInfo.objects.all().order_by('comment_count')  # 默认为升序排序
+BookInfo.objects.all().order_by('-comment_count')  # 降序排序  all()可以省略
+
+# ---------------------------多表查询----------------------------------
+
+# 1. 查询书籍id为1的所有人物信息
+book = BookInfo.objects.get(id=1)
+book.characters_set.all()
+
+# 通过人物表查询
+Characters.objects.filter(book=1)  # 这里的book为book_id
+
+# 2. 查询人物为1的书籍信息
+person = Characters.objects.get(id=1)  # 人物信息对象
+# person.book --> 人物对应的书籍对象
+
+# 通过从表查主表的信息
+# 查询图书，要求图书人物为"郭靖"
+BookInfo.objects.filter(characters__name='郭靖')
+# 查询图书，要求图书中人物的描述包含"八"
+BookInfo.objects.filter(characters__description__contains='八')
+
+# 通过主表差从表信息
+# 查询书名为"天龙八部"的所有人物
+Characters.objects.filter(book__name='天龙八部')
+# 查询图书阅读量大于30的所有人物
+Characters.objects.filter(book__read_count__gt=30)

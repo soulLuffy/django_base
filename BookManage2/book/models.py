@@ -16,6 +16,9 @@ class BookInfo(models.Model):
         db_table = 'BookInfo'  # 自定义数据表名称
         verbose_name = '书籍管理'  # admin站点使用
 
+    # Characters表与此表关联，系统会自动生成一个属性
+    # characters_set = [人物信息]  获取属性时用
+    # characters                  查询时可使用
 
 class Characters(models.Model):
     name = models.CharField(max_length=20, unique=True)
